@@ -314,7 +314,11 @@ export class StatusPluginCtrl extends MetricsPanelCtrl {
 				this.handleTextOnly(s, target);
 			}
 		}
+		
+		// process all series
+		_.each(this.series, processSeries);
 
+		// process targets with no related series - only for crit on no data
 		targets.filter(target => processedTargets.indexOf(target) === -1).forEach(target => {
 			const dummySeries = new TimeSeries({
 				datapoints: [],
@@ -322,8 +326,6 @@ export class StatusPluginCtrl extends MetricsPanelCtrl {
 			});
 			processSeries(dummySeries);
 		});
-
-		_.each(this.series, processSeries);
 
 		if(this.panel.isHideAlertsOnDisable && this.disabled.length > 0) {
 			this.crit = [];

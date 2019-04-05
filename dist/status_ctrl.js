@@ -401,6 +401,10 @@ System.register(["app/plugins/sdk", "lodash", "app/core/time_series2", "app/core
 							}
 						};
 
+						// process all series
+						_.each(this.series, processSeries);
+
+						// process targets with no related series - only for crit on no data
 						targets.filter(function (target) {
 							return processedTargets.indexOf(target) === -1;
 						}).forEach(function (target) {
@@ -410,8 +414,6 @@ System.register(["app/plugins/sdk", "lodash", "app/core/time_series2", "app/core
 							});
 							processSeries(dummySeries);
 						});
-
-						_.each(this.series, processSeries);
 
 						if (this.panel.isHideAlertsOnDisable && this.disabled.length > 0) {
 							this.crit = [];
