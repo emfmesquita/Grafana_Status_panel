@@ -316,9 +316,11 @@ export class StatusPluginCtrl extends MetricsPanelCtrl {
 		}
 		
 		// process all series
+		// and keep targets with related series on processedTargets array
 		_.each(this.series, processSeries);
 
 		// process targets with no related series - only for crit on no data
+		// adds an empty serie forcing critical state on target
 		targets.filter(target => processedTargets.indexOf(target) === -1).forEach(target => {
 			const dummySeries = new TimeSeries({
 				datapoints: [],
@@ -554,8 +556,10 @@ export class StatusPluginCtrl extends MetricsPanelCtrl {
 
 	parseUri() {
 		if (this.panel.links && this.panel.links.length > 0) {
-			let link = this.panel.links[0];
+			let link = this.panel.links[0]; // uses the first link as panel link
 
+			// on new versions of grafana absolute links have url property
+			// and dashboard links have dashUri property
 			if (link.url) {
 				this.uri = link.url;
 			} else if(link.dashUri) {
